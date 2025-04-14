@@ -18,6 +18,7 @@ async function createWindow () {
     icon: path.resolve(currentDir, 'icons/icon.png'), // tray icon
     width: 155,
     height: 155,
+    resizable: true,
     useContentSize: true,
     autoHideMenuBar: true,
     transparent: true,
