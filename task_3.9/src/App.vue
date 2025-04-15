@@ -33,7 +33,7 @@
           <div class="text-32 text-weight-700 weather-temp">{{ Math.floor(dayForecast.main.temp) }}</div>
           <Icon
             class="forecast-picture"
-            url="/public/icons/sun-clouds.svg"
+            :url="getWeatherUrlById(dayForecast.weather[0].id)"
             width="50px"
             height="50px"
           />
@@ -41,8 +41,8 @@
       </div>
     </div>
 
-    <Icon v-if="windowHeight < 345 && windowWidth < 250" class="weather-icon" width="100px" height="100px" url="/public/icons/sun-clouds.svg"/>
-    <Icon v-if="windowHeight < 345 && windowWidth > 250" class="weather-icon" width="215px" height="100%" url="/public/icons/sun-clouds.svg"/>
+    <Icon v-if="windowHeight < 345 && windowWidth < 250" class="weather-icon" width="100px" height="100px" :url="getWeatherUrlById(weather.list[0].weather[0].id)"/>
+    <Icon v-if="windowHeight < 345 && windowWidth > 250" class="weather-icon" width="215px" height="100%" :url="getWeatherUrlById(weather.list[0].weather[0].id)"/>
   </div>
 </template>
 
@@ -125,13 +125,20 @@ export default defineComponent({
       })
 
       return list;
+    },
+    getWeatherUrlById(weatherId) {
+      if (weatherId === 800) return '/public/icons/sun.svg';
+      else if (weatherId === 801) return '/public/icons/sun-clouds.svg';
+      else if (weatherId >= 600 && weatherId < 623) return '/public/icons/snow.svg';
+      else if (weatherId >= 500 && weatherId < 532) return '/public/icons/rain.svg';
+      else if (weatherId >= 200 && weatherId < 233) return '/public/icons/lightening.svg';
+      else return '/public/icons/clouds.svg';
     }
   },
   async mounted() {
     const location = await this.fetchLocation();
     this.weather = await this.fetchWeather(location);
     this.dailyForecast = this.getDailyForecast(this.weather.list);
-    console.log(this.dailyForecast);
 
     window.addEventListener('resize', this.handleWindowResize);
   },
